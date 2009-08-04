@@ -115,7 +115,11 @@ class Manual {
 						$archive = new \PharData($filename);
 						$lookup = new $lookup_class($archive);
 						echo 'FOUND: '.$filename.' which is a '.$title." manual.\n";
-						$this->archives[$title] = $lookup;
+						$this->archives[$title] = array(
+							'lookup'   => $lookup,
+							'filename' => $filename,
+							'archive'  => $archive,
+						);
 						break;
 					} catch (\Exception $e) {
 						echo 'NOTICE: '.$filename.' seems to be no '.$title." manual.\n";
@@ -129,13 +133,25 @@ class Manual {
 		$exceptions = array();
 		foreach ($this->archives as $title => $archive) {
 			try {
-				return $archive->get($ref);
+				return $archive['lookup']->get($ref);
 			} catch (\Exception $e) {
 				$exceptions[$title] = $e;
 			}
 		}
 
 		throw new ManualPageNotFoundException($ref, $exceptions);
+	}
+
+	public function getLoadedManuals() {
+		$retval = array();
+		foreach ($this->archives as $name => $data) {
+			$retval[] = array(
+				'title'    => $name,
+				'filename' => $data['filename'],
+				'archive'  => $data['archive'],
+			);
+		}
+		return $retval;
 	}
 }
 

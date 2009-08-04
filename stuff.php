@@ -32,7 +32,15 @@ class HTMLManualViewer extends DocViewer {
 		$this->manual = $manual;
 		$this->widget = new GtkHTML();
 
-		$this->widget->load_from_string(file_get_contents('index.html'));
+		$manuals = $manual->getLoadedManuals();
+		$index = '<table><tr><th>Title</th><th>Filename</th><th>Files</th></tr>';
+		foreach ($manuals as $m) {
+			$index .= '<tr><td>'.htmlentities($m['title']).'</td>'.
+				'<td>'.htmlentities($m['filename']).'</td>'.
+				'<td>'.count($m['archive']).'</td></tr>';
+		}
+		$index .= '</table>';
+		$this->widget->load_from_string(file_get_contents('index.html').$index);
 		$this->widget->show_all();
 	}
 
