@@ -150,6 +150,9 @@ function addClasses(GtkTreeStore $store, $parent, array $classes) {
 		if (is_string($rc)) {
 			$rc = new ReflectionClass($rc);
 		}
+		if (!$rc->isInternal()) {
+			return;
+		}
 		$class = $store->append($parent, array($rc->getName(), $rc));
 		addFunctions($store, $class, $rc->getMethods());
 	}
@@ -191,8 +194,8 @@ function addFunctions(GtkTreeStore $store, $parent, array $functions) {
 		if (is_string($ref)) {
 			$ref = new ReflectionFunction($ref);
 		}
-		if (is_array($ref)) {
-			debug_print_backtrace();
+		if (!$ref->isInternal()) {
+			return;
 		}
 		$name = getFunctionString($ref);
 		$store->append($parent, array($name, $ref));
