@@ -4,7 +4,6 @@ error_reporting(E_ALL);
 include 'stuff.php';
 include 'manual.php';
 
-var_dump(ini_get('include_path'));
 $main = new MainWindowController('phar://'.__FILE__.'/explorer.glade');
 $glade = $main->getGlade();
 
