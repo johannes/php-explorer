@@ -76,6 +76,10 @@ class ManualPageNotFoundException extends \Exception {
 			throw new \InvalidArgumentException(get_class($ref).' is not expected');
 		}
 	}
+
+	public function getArchive() {
+		return $this->archive;
+	}
 }
 
 /* private */ class PHP_Manual_Lookup extends Lookup {
@@ -86,6 +90,36 @@ class ManualPageNotFoundException extends \Exception {
 /* private */ class PHP_Gtk_Manual_Lookup extends Lookup {
 	public function verifyArchive(\PharData $archive) {
 		return isset($archive['html/gobject.html']);
+	}
+}
+
+class FullTextSearch extends \FilterITerator {
+	protected $needle;
+	protected $strip_tags;
+
+	public function __construct(\PharData $archive, $needle, $strip_tags = true) {
+		$flags = \RecursiveIteratorIterator::LEAVES_ONLY;
+		$it = new \RecursiveIteratorIterator($archive, $flags);
+		parent::__construct($it);
+
+		$this->needle = $needle;
+		$this->strip_tags = $strip_tags;
+	}
+
+	public function accept() {
+		$current = $this->current();
+		// This is not 100% clean but should be good enough for this case:
+		if (strpos($current->getFilename(), '.htm') === false) {
+			return false;
+		}
+
+		// This is bad for larger files ...
+		$content = file_get_contents($current->getPathname());
+		if ($this->strip_tags) {
+			$content = strip_tags($content);
+		}
+
+		return strpos($content, $this->needle) !== false;
 	}
 }
 
@@ -150,6 +184,14 @@ class Manual {
 				'filename' => $data['filename'],
 				'archive'  => $data['archive'],
 			);
+		}
+		return $retval;
+	}
+
+	public function searchFulltext($needle, $strip_tags = true) {
+		$retval = array();
+		foreach ($this->archives as $name => $data) {
+			 $retval[$name] = new FullTextSearch($data['archive'], $needle, $strip_tags);
 		}
 		return $retval;
 	}
