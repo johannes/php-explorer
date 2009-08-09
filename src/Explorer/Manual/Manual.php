@@ -29,7 +29,6 @@ class Manual {
 					try {
 						$archive = new \PharData($filename);
 						$lookup = new $lookup_class($archive);
-						echo 'FOUND: '.$filename.' which is a '.$title." manual.\n";
 						$this->archives[$title] = array(
 							'lookup'   => $lookup,
 							'filename' => $filename,
