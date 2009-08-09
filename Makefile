@@ -10,4 +10,4 @@ explorer.phar: build-explorer.phar
 
 run: build-explorer.phar
 	${PHP_PATH}/php ./explorer.phar
-	rm explorer.phar
+	rm core
