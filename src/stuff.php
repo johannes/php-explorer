@@ -13,6 +13,11 @@ class InitFuncFilterIterator extends FilterIterator {
 class MainWindowController {
 	protected $glade;
 	protected $viewer;
+	/**
+	 *
+	 * @var \Explorer\Manual\Manual
+	 */
+	protected $manual;
 
 	public function __construct($file) {
 		$this->loadGlade($file);
@@ -38,8 +43,8 @@ class MainWindowController {
 	public function initBrowser() {
 		$container = $this->glade->get_widget('docscrolledwindow');
 		if (class_exists('GtkHTML')) {
-			$manual = new \Explorer\Manual\Manual('data', 'en');
-			$this->viewer = new \Explorer\GUI\HTMLManualViewer($manual);
+			$this->manual = new \Explorer\Manual\Manual('data', 'en');
+			$this->viewer = new \Explorer\GUI\HTMLManualViewer($this->manual);
 		} else {
 			$this->viewer = new \Explorer\GUI\TextDocViewer();
 		}
@@ -63,10 +68,43 @@ class MainWindowController {
 		$this->glade->get_widget('aboutdialog1')->show();
 	}
 
+	public function onFullTextSearchClick() {
+		$input = trim($this->glade->get_widget('searchentry')->get_text());
+		if (strlen($input) == 0) {
+			$dialog = new \GtkMessageDialog($this->glade->get_widget('mainwindow'), 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK,
+			    'No input');
+			$dialog->set_markup('No search term entered');
+			$dialog->run();
+			$dialog->destroy();
+			return;
+		}
+		$results = $this->manual->searchFulltext($input);
+		$store = new GtkTreeStore(GObject::TYPE_STRING, GObject::TYPE_PHP_VALUE);
+		foreach($results as $title=>$found) {
+			$man_container = $store->append(null, array($title, null));
+			$basenamelen = strlen('phar://'.$found->getArchiveFileName());
+			echo 'phar://'.$found->getArchiveFileName(), "\n";
+			foreach($found as $item) {
+				/** @var $item \SplFileObject */
+				$doc = \DomDocument::loadHTMLFile($item->getPathname());
+				$caption = $doc->getElementsByTagName('title')->item(0)->firstChild->wholeText;
+				$store->append($man_container, array($caption, $item));
+			}
+		}
+		$tree = $this->glade->get_widget('searchtreeview');
+		$tree->set_model($store);
+		$tree->get_selection()->connect('changed', array($this, 'onSelectHandler'));
+
+		$cell_renderer = new GtkCellRendererText();
+		$colExt = new GtkTreeViewColumn('', $cell_renderer, 'text', 0);
+		$tree->append_column($colExt);
+	}
+
 	public function onSelectHandler($selection) {
 		list($model, $iter) = $selection->get_selected();
 
 		$ref = $model->get_value($iter, 1);
+		$text = '';
 		if ($ref) {
 			switch(get_class($ref)) {
 			case 'ReflectionClass':
@@ -90,11 +128,16 @@ class MainWindowController {
 			case 'ReflectionExtension':
 				$text = $ref->getName();
 				break;
+			default:
+				$text = "Can't display element of class ".get_class($ref);
+				break;
 			}
 		}
 
 		$this->glade->get_widget('datalabel')->set_text($text);
-		$this->viewer->showDocumentation($ref);
+		if ($ref instanceof Reflector) {
+			$this->viewer->showDocumentation($ref);
+		}
 	}
 
 }

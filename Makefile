@@ -7,3 +7,7 @@ build-explorer.phar:
 	chmod a+x explorer.phar
 
 explorer.phar: build-explorer.phar
+
+run: build-explorer.phar
+	${PHP_PATH}/php ./explorer.phar
+	rm explorer.phar

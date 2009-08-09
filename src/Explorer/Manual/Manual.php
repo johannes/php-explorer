@@ -87,7 +87,7 @@ class Manual {
 	public function searchFulltext($needle, $strip_tags = true) {
 		$retval = array();
 		foreach ($this->archives as $name => $data) {
-			 $retval[$name] = new FullTextSearch($data['archive'], $needle, $strip_tags);
+			 $retval[$name] = new FullTextSearch($data['archive'], $data['filename'], $needle, $strip_tags);
 		}
 		return $retval;
 	}

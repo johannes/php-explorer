@@ -1,15 +1,20 @@
 <?php
 namespace Explorer\Manual;
 
-class FullTextSearch extends \FilterITerator {
+class FullTextSearch extends \FilterIterator {
+	/**
+	 * @var \PharData
+	 */
+	protected $archive_file;
 	protected $needle;
 	protected $strip_tags;
 
-	public function __construct(\PharData $archive, $needle, $strip_tags = true) {
+	public function __construct(\PharData $archive, $archive_file, $needle, $strip_tags = true) {
 		$flags = \RecursiveIteratorIterator::LEAVES_ONLY;
 		$it = new \RecursiveIteratorIterator($archive, $flags);
 		parent::__construct($it);
 
+		$this->archive_file = $archive_file;
 		$this->needle = $needle;
 		$this->strip_tags = $strip_tags;
 	}
@@ -28,5 +33,9 @@ class FullTextSearch extends \FilterITerator {
 		}
 
 		return strpos($content, $this->needle) !== false;
+	}
+
+	public function getArchiveFileName() {
+		return $this->archive_file;
 	}
 }
