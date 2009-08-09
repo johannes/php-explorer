@@ -132,13 +132,14 @@ class Manual {
 
 	private $filetypes = array('tar.bz2', 'tar.gz', 'zip');
 		
-
+	/*@var array */
 	protected $archives;
 
-	static function getManuals() {
-		return glob('php_*manual*.tar.*');
-	}
-
+	/**
+	 *
+	 * @param string $directory
+	 * @param string $language
+	 */
 	public function __construct($directory, $language) {
 		foreach ($this->descriptors as $title => $descriptor) {
 			$lookup_class = $descriptor['lookup_class'];
@@ -163,6 +164,11 @@ class Manual {
 		}
 	}
 
+	/**
+	 *
+	 * @param Reflector $ref
+	 * @return \SplFileObject
+	 */
 	public function get(\Reflector $ref) {
 		$exceptions = array();
 		foreach ($this->archives as $title => $archive) {
@@ -176,6 +182,10 @@ class Manual {
 		throw new ManualPageNotFoundException($ref, $exceptions);
 	}
 
+	/**
+	 *
+	 * @return array
+	 */
 	public function getLoadedManuals() {
 		$retval = array();
 		foreach ($this->archives as $name => $data) {
@@ -188,6 +198,12 @@ class Manual {
 		return $retval;
 	}
 
+	/**
+	 *
+	 * @param string $needle
+	 * @param bool $strip_tags
+	 * @return array
+	 */
 	public function searchFulltext($needle, $strip_tags = true) {
 		$retval = array();
 		foreach ($this->archives as $name => $data) {

@@ -1,10 +1,10 @@
-#!/opt/php/5.3/bin/php
+#!/usr/bin/env php
 <?php
 error_reporting(E_ALL);
 include 'stuff.php';
 include 'manual.php';
 
-$main = new MainWindowController('phar://'.__FILE__.'/explorer.glade');
+$main = new MainWindowController('phar://'.__FILE__.'/util/explorer.glade');
 $glade = $main->getGlade();
 
 $status = $glade->get_widget('loadingprogress');
