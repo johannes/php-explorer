@@ -1,9 +1,10 @@
 <?php
 namespace Test\Explorer\Manual;
 
+ini_set('include_path', __DIR__.'/../../../src'.PATH_SEPARATOR.ini_get('include_path'));
 require_once 'PHPUnit/Framework.php';
 
-require_once __DIR__.'/../../../src/Explorer/Manual/manual.php';
+require_once 'Explorer/Manual/Manual.php';
 
 /**
  * Test class for Explorer\Manual\Manual.
