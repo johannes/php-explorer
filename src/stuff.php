@@ -40,7 +40,7 @@ class HTMLManualViewer extends DocViewer {
 				'<td>'.count($m['archive']).'</td></tr>';
 		}
 		$index .= '</table>';
-		$this->widget->load_from_string(file_get_contents('index.html').$index);
+		$this->widget->load_from_string(file_get_contents('data/index.html', FILE_USE_INCLUDE_PATH).$index);
 		$this->widget->show_all();
 	}
 
@@ -92,7 +92,7 @@ class MainWindowController {
 	public function initBrowser() {
 		$container = $this->glade->get_widget('docscrolledwindow');
 		if (class_exists('GtkHTML')) {
-			$manual = new \Explorer\Manual\Manual('.', 'en');
+			$manual = new \Explorer\Manual\Manual('data', 'en');
 			$this->viewer = new HTMLManualViewer($manual);
 		} else {
 			$this->viewer = new TextDocViewer();

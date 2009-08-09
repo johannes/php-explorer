@@ -1,10 +1,12 @@
 #!/usr/bin/env php
 <?php
 error_reporting(E_ALL);
-include 'stuff.php';
-include 'manual.php';
+ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
 
-$main = new MainWindowController('phar://'.__FILE__.'/util/explorer.glade');
+include 'stuff.php';
+include 'Explorer/Manual/manual.php';
+
+$main = new MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
 $glade = $main->getGlade();
 
 $status = $glade->get_widget('loadingprogress');
