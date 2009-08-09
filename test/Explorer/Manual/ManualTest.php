@@ -62,7 +62,17 @@ class ManualTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        // Remove the following lines when you implement this test.
+	if (extension_loaded('bcmath')) {
+	    $result = $this->object->get(new \ReflectionExtension('bcmath'));
+	    $this->assertType('PharFileInfo', $result);
+	}
+	if (extension_loaded('bz2')) {
+	    $result = $this->object->get(new \ReflectionExtension('bcmath'));
+	    $this->assertType('PharFileInfo', $result);
+	}
+	$result = $this->object->get(new \ReflectionExtension('spl'));
+	$this->assertType('PharFileInfo', $result);
+	// Remove the following lines when you implement this test.
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
         );
