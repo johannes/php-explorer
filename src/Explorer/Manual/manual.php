@@ -133,7 +133,7 @@ class Manual {
 	private $filetypes = array('tar.bz2', 'tar.gz', 'zip');
 		
 	/*@var array */
-	protected $archives;
+	protected $archives = array();
 
 	/**
 	 *
