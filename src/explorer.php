@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 error_reporting(E_ALL);
+
 ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
 
 include 'stuff.php';
-include 'Explorer/Manual/manual.php';
+include 'Explorer/Manual/Manual.php';
 
 $main = new MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
 $glade = $main->getGlade();
