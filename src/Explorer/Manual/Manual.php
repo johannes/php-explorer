@@ -98,7 +98,13 @@ class Manual {
 class NoManualArchiveException extends \Exception {}
 
 class ManualPageNotFoundException extends \Exception {
+	/**
+	 * @var \Reflector
+	 */
 	protected $ref;
+	/**
+	 * @var \Exception
+	 */
 	protected $orig;
 	public function __construct(\Reflector $ref, array $exceptions) {
 		parent::__construct(sprintf('No Manual page found for %s (%s) in %s', $ref->getName(), get_class($ref), implode(', ', array_keys($exceptions))), 0, end($exceptions));

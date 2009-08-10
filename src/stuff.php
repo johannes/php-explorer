@@ -128,6 +128,14 @@ class MainWindowController {
 			case 'ReflectionExtension':
 				$text = $ref->getName();
 				break;
+			case 'PharFileInfo':
+				/* TODO: Fix architecture */
+				if ($this->viewer instanceof \Explorer\GUI\HTMLManualViewer) {
+				    $this->viewer->displayString(file_get_contents($ref->getPathinfo()));
+				    return;
+				}
+				throw \Exception("Shouldn't happen - fix the architecture");
+				break;
 			default:
 				$text = "Can't display element of class ".get_class($ref);
 				break;

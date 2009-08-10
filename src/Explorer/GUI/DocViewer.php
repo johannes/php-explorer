@@ -55,4 +55,8 @@ class HTMLManualViewer extends DocViewer {
 		}
 		$this->widget->load_from_string($html_text);
 	}
+
+	public function displayString($content) {
+	    $this->widget->load_from_string($content);
+	}
 }
