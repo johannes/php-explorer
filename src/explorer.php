@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 
 function gtk_die($message) {
-    $dialog = new \GtkMessageDialog(null, 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK, 'Extension missing');
+    $dialog = new \GtkMessageDialog(null, 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK, $message);
     $dialog->set_markup($message);
     $dialog->run();
     $dialog->destroy();
