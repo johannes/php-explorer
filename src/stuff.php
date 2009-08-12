@@ -23,7 +23,7 @@ class MainWindowController {
 		$this->loadGlade($file);
 		$status = $this->glade->get_widget('loadingprogress');
 
-		$r = new ReflectionObject($this);
+		$r = new \ReflectionObject($this);
 		$methods = iterator_to_array(new InitFuncFilterIterator(new ArrayIterator($r->getMethods())));
 		$count = count($methods);
 		$i = 0;
@@ -31,8 +31,8 @@ class MainWindowController {
 			$this->$method();
 
 			$status->set_pulse_step(++$i/$count);
-			while (Gtk::events_pending()) {
-				Gtk::main_iteration();
+			while (\Gtk::events_pending()) {
+				\Gtk::main_iteration();
 			}
 		}
 
