@@ -25,7 +25,40 @@ class MainWindowController {
 		$r = new ReflectionObject($this);
 		foreach (new InitFuncFilterIterator(new ArrayIterator($r->getMethods())) as $method) {
 			$this->$method();
+
+			/*
+			$status->set_pulse_step(1/4);
+			while (Gtk::events_pending()) {
+				Gtk::main_iteration();
+			}
+			*/
 		}
+	}
+
+	public function initFunctionList() {
+		$store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
+		addFunctions($store, NULL, get_defined_functions());
+		fillTreeView($this, $this->glade, 'functiontreeview', $store);
+	}
+
+	private function class_tree($store, $parent, $all, $items) {
+		foreach ($all[$items] as $item) {
+			$p = $store->append($parent, array($item, new \ReflectionClass($item)));
+			if (!empty($all[$item])) {
+				$this->class_tree($store, $p, $all, $item);
+			}
+		}
+		return $store;
+	}
+
+	public function initClassTree() {
+		$children = array();
+		foreach (get_declared_classes() as $c) {
+			$children[get_parent_class($c)][] = $c;
+		}
+
+		$store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
+		fillTreeView($this, $this->glade, 'classtreeview', $this->class_tree($store, null, $children, '0'));
 	}
 
 	public function initExtensionTree() {
