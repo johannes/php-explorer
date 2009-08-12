@@ -49,7 +49,7 @@ class HTMLManualViewer extends DocViewer {
 	public function showDocumentation(\Reflector $r) {
 		try {
 			$html_text = $this->manual->get($r)->getContent();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			echo $e."\n\n";
 			$html_text = '<pre>'.$r.'</pre>';
 		}
