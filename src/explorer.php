@@ -34,11 +34,5 @@ include 'stuff.php';
 include 'Explorer/Manual/Manual.php';
 
 $main = new MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
-$glade = $main->getGlade();
-
-echo "init done\n";
-
-$glade->get_widget('loadingwindow')->set_visible(false);
-$glade->get_widget('mainwindow')->set_visible(true);
 Gtk::Main();
 __HALT_COMPILER(); ?>

@@ -21,18 +21,23 @@ class MainWindowController {
 
 	public function __construct($file) {
 		$this->loadGlade($file);
+		$status = $this->glade->get_widget('loadingprogress');
 
 		$r = new ReflectionObject($this);
-		foreach (new InitFuncFilterIterator(new ArrayIterator($r->getMethods())) as $method) {
+		$methods = iterator_to_array(new InitFuncFilterIterator(new ArrayIterator($r->getMethods())));
+		$count = count($methods);
+		$i = 0;
+		foreach ($methods as $method) {
 			$this->$method();
 
-			/*
-			$status->set_pulse_step(1/4);
+			$status->set_pulse_step(++$i/$count);
 			while (Gtk::events_pending()) {
 				Gtk::main_iteration();
 			}
-			*/
 		}
+
+		$this->glade->get_widget('loadingwindow')->set_visible(false);
+		$this->glade->get_widget('mainwindow')->set_visible(true);
 	}
 
 	public function initFunctionList() {
