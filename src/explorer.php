@@ -2,6 +2,19 @@
 <?php
 error_reporting(E_ALL);
 
+if (!extension_loaded('php-gtk')) {
+    die("ERROR: PHP Gtk2 not loaded!\n");
+}
+
+if (!extension_loaded('phar')) {
+	$dialog = new \GtkMessageDialog(null, 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK, 'Extension missing');
+	$message = 'PHAR Extension not loaded! Terminating.';
+	$dialog->set_markup($message);
+	$dialog->run();
+	$dialog->destroy();
+	die();
+}
+
 ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
 
 include 'stuff.php';
