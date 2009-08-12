@@ -30,9 +30,11 @@ if(!phar::canCompress()) {
 
 ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
 
+$filename = 'Explorer/Controller/MainWindowController.php';
 include 'stuff.php';
+include $filename;
 include 'Explorer/Manual/Manual.php';
 
-$main = new MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
+$main = new Explorer\Controller\MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
 Gtk::Main();
 __HALT_COMPILER(); ?>
