@@ -15,7 +15,7 @@ if (!extension_loaded('php-gtk')) {
 }
 
 if (version_compare('5.3.0', PHP_VERSION, '>')) {
-    gtk_die('PHP Explorer requires PHP 5.3.0 ornewer.');
+    gtk_die('PHP Explorer requires PHP 5.3.0 or newer.');
 }
 
 if (!extension_loaded('phar')) {
