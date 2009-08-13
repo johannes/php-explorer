@@ -15,7 +15,7 @@ foreach (get_loaded_extensions() as $ext) {
     try {
 	$manuals->get(new ReflectionExtension($ext));
     } catch (Explorer\Manual\ManualPageNotFoundException $e) {
-	echo "missing function: $ext\n";
+	echo "missing extension: $ext\n";
     }
 }
 
