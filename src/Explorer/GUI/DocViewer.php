@@ -35,13 +35,19 @@ class HTMLManualViewer extends DocViewer {
 		$this->widget = new \GtkHTML();
 
 		$manuals = $manual->getLoadedManuals();
-		$index = '<table><tr><th>Title</th><th>Filename</th><th>Files</th></tr>';
-		foreach ($manuals as $m) {
-			$index .= '<tr><td>'.htmlentities($m['title']).'</td>'.
-				'<td>'.htmlentities($m['filename']).'</td>'.
-				'<td>'.count($m['archive']).'</td></tr>';
+		if (count($manuals)) {
+			$index = '<table><tr><th>Title</th><th>Filename</th><th>Files</th></tr>';
+			foreach ($manuals as $m) {
+				$index .= '<tr><td>'.htmlentities($m['title']).'</td>'.
+					'<td>'.htmlentities($m['filename']).'</td>'.
+					'<td>'.count($m['archive']).'</td></tr>';
+			}
+			$index .= '</table>';
+		} else {
+			$index = '<p><b>No Manuals found!</b><p><p>Please place some manuals in <i>'.
+				getcwd().DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.
+				'</i> and restart the explorer!</p>';
 		}
-		$index .= '</table>';
 		$this->widget->load_from_string(file_get_contents('data/index.html', FILE_USE_INCLUDE_PATH).$index);
 		$this->widget->show_all();
 	}
