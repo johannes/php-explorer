@@ -19,22 +19,22 @@ if (version_compare('5.3.0', PHP_VERSION, '>')) {
 }
 
 if (!extension_loaded('phar')) {
-    $message = 'PHAR Extension not loaded! Terminating.';
-    gtk_die($message);
+    gtk_die('PHAR Extension not loaded! Terminating.');
 }
 
 if(!phar::canCompress()) {
-    $message = 'PHAR Extension has no compression support.';
-    gtk_die($message);
+    gtk_die('PHAR Extension has no compression support.');
 }
 
 ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
 
-$filename = 'Explorer/Controller/MainWindowController.php';
+
 include 'stuff.php';
-include $filename;
+include 'Explorer/Controller/MainWindowController.php';
 include 'Explorer/Manual/Manual.php';
+
 
 $main = new Explorer\Controller\MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
 Gtk::Main();
+
 __HALT_COMPILER(); ?>
