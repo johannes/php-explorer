@@ -210,6 +210,7 @@ class ManualPageNotFoundException extends \Exception {
 		$this->name = strtolower($name);
 	}
 	public function accept() {
+		/* TODO: Use a better rule ... */
 		return strpos(strtolower($this->current()->getFilename()), $this->name) !== false;
 	}
 }
