@@ -147,16 +147,16 @@ class ManualPageNotFoundException extends \Exception {
 	}
 
 	public function getExtension($ext) {
-		switch ($ext) {
-		case 'bcmath':
-			$ext = 'bc';
-			break;
-		case 'bz2':
-			$ext = 'bzip2';
-			break;
-		default:
+		static $translation = array(
+			'bcmath' => 'bc',
+			'bz2'    => 'bzip2',
+			'date'   => 'datetime'
+		);
+
+		if (isset($translation[$ext])) {
+			$ext = $translation[$ext];
+		} else {
 			$ext = self::makeFilename($ext);
-			break;
 		}
 		$filename = 'html/ref.'.$ext.'.html';
 		return $this->archive[$filename];
