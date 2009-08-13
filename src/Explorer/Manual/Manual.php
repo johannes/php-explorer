@@ -187,8 +187,29 @@ class ManualPageNotFoundException extends \Exception {
 		return isset($archive['html/about.html']);
 	}
 }
+
 /* private */ class PHP_Gtk_Manual_Lookup extends Lookup {
+	public function getClass($class) {
+		$it = new GtkLookupFilterIterator($this->archive, $class);
+		foreach ($it as $match) {
+			return $match;
+		}
+		return parent::getClass($class);
+	}
+
 	public function verifyArchive(\PharData $archive) {
 		return isset($archive['html/gobject.html']);
+	}
+}
+
+/* private */ class GtkLookupFilterIterator extends \FilterIterator {
+	protected $name;
+
+	public function __construct(\PharData $archive, $name) {
+		parent::__construct(new \RecursiveIteratorIterator($archive));
+		$this->name = strtolower($name);
+	}
+	public function accept() {
+		return strpos(strtolower($this->current()->getFilename()), $this->name) !== false;
 	}
 }
