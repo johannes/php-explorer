@@ -26,7 +26,13 @@ if(!phar::canCompress()) {
     gtk_die('PHAR Extension has no compression support.');
 }
 
-ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
+if (basename(__FILE__) == 'explorer.php') {
+    ini_set('include_path', __DIR__.PATH_SEPARATOR.ini_get('include_path'));
+    $gladefile = __DIR__.'/data/explorer.glade';
+} else {
+    ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
+    $gladefile = 'phar://'.__FILE__.'/data/explorer.glade';
+}
 
 
 include 'stuff.php';
@@ -34,7 +40,7 @@ include 'Explorer/Controller/MainWindowController.php';
 include 'Explorer/Manual/Manual.php';
 
 
-$main = new Explorer\Controller\MainWindowController('phar://'.__FILE__.'/data/explorer.glade');
+$main = new Explorer\Controller\MainWindowController($gladefile);
 Gtk::Main();
 
 __HALT_COMPILER(); ?>
