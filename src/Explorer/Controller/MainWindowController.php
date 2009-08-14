@@ -109,6 +109,15 @@ class MainWindowController {
 	}
 
 	public function onFullTextSearchClick() {
+		if (!$this->manual) {
+			// TODO: One might think aobut using an external browser or the online docs...
+			$dialog = new \GtkMessageDialog($this->glade->get_widget('mainwindow'), 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK,
+			    'GtkHTML needed');
+			$dialog->set_markup('For doing full text searches GtkHTML support is required in your PHP configuration.');
+			$dialog->run();
+			$dialog->destroy();
+			return;
+		}
 		$input = trim($this->glade->get_widget('searchentry')->get_text());
 		if (strlen($input) == 0) {
 			$dialog = new \GtkMessageDialog($this->glade->get_widget('mainwindow'), 0, \Gtk::MESSAGE_ERROR, \Gtk::BUTTONS_OK,
