@@ -27,18 +27,21 @@ if(!phar::canCompress()) {
 }
 
 if (basename(__FILE__) == 'explorer.php') {
-    ini_set('include_path', __DIR__.PATH_SEPARATOR.ini_get('include_path'));
-    $gladefile = __DIR__.'/data/explorer.glade';
+    define('BASEDIR', __DIR__);
 } else {
-    ini_set('include_path', 'phar://'.__FILE__.PATH_SEPARATOR.ini_get('include_path'));
-    $gladefile = 'phar://'.__FILE__.'/data/explorer.glade';
+    define('BASEDIR', 'phar://'.__FILE__);
 }
+
+ini_set('include_path', BASEDIR.PATH_SEPARATOR.ini_get('include_path'));
+$gladefile = BASEDIR.'/data/explorer.glade';
 
 
 include 'stuff.php';
+include 'Explorer/Config.php';
 include 'Explorer/Controller/MainWindowController.php';
 include 'Explorer/Manual/Manual.php';
 
+Explorer\Config::getInstance();
 
 $main = new Explorer\Controller\MainWindowController($gladefile);
 Gtk::Main();

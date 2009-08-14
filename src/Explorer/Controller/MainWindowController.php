@@ -83,7 +83,8 @@ class MainWindowController {
 	public function initBrowser() {
 		$container = $this->glade->get_widget('docscrolledwindow');
 		if (class_exists('GtkHTML')) {
-			$this->manual = new \Explorer\Manual\Manual('data', 'en');
+			$config = \Explorer\Config::getInstance();
+			$this->manual = new \Explorer\Manual\Manual($config['datadir'], $config['language']);
 			$this->viewer = new \Explorer\GUI\HTMLManualViewer($this->manual);
 		} else {
 			$this->viewer = new \Explorer\GUI\TextDocViewer();
