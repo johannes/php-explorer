@@ -9,19 +9,31 @@ class Config implements \ArrayAccess {
     private function parseFile($filename) {
 	$data = parse_ini_file($filename, false);
 	if (is_array($data)) {
-	    $this->data[] = $data;
+	    $this->data[$filename] = $data;
 	}
     }
+
+    /**
+     * Returns a list of directories to search, can be overloaded for tests and such
+     *
+     * The first directory in the array (index 0) has highest priority, the last the least
+     *
+     * @return array
+     */
+    protected function getConfigDirs() {
+	return array(
+	    getenv('HOME'),
+	    '/etc',
+	    BASEDIR.'/data'
+	);
+    }
+
     /**
      *
      * @param string $overridefile file path to an file overriding settings
      */
     private function __construct($overridefile = null) {
-	$order = array(
-	    getenv('HOME'),
-	    '/etc',
-	    BASEDIR.'/data'
-	);
+	$order = $this->getConfigDirs();
 	if ($overridefile) {
 	    array_unshift($order, $overridefile);
 	} else {
@@ -37,6 +49,11 @@ class Config implements \ArrayAccess {
 	}
     }
 
+    /**
+     *
+     * @param string $overridefile file path to an file overriding settings
+     * @return Explorer\config
+     */
     static function getInstance($overridefile = null) {
 	if (self::$instance) {
 	    return $instance;
@@ -44,6 +61,14 @@ class Config implements \ArrayAccess {
 	    $class = get_called_class();
 	    return new $class($overridefile);
 	}
+    }
+
+    public function getLoadedFiles() {
+	$data = $this->data;
+	if (isset($data[0])) {
+	    unset($data[0]);
+	}
+	return array_keys($data);
     }
 
     public function offsetGet($offset) {
