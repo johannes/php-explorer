@@ -33,17 +33,9 @@ if (basename(__FILE__) == 'explorer.php') {
 }
 
 ini_set('include_path', BASEDIR.PATH_SEPARATOR.ini_get('include_path'));
-$gladefile = BASEDIR.'/data/explorer.glade';
+include 'Explorer/Application.php';
 
-
-include 'stuff.php';
-include 'Explorer/Config.php';
-include 'Explorer/Controller/MainWindowController.php';
-include 'Explorer/Manual/Manual.php';
-
-Explorer\Config::getInstance();
-
-$main = new Explorer\Controller\MainWindowController($gladefile);
-Gtk::Main();
+$app = new Explorer\Application();
+$app->run();
 
 __HALT_COMPILER(); ?>

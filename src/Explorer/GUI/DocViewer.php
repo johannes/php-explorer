@@ -46,7 +46,7 @@ class HTMLManualViewer extends DocViewer {
 		} else {
 			$index = '<p><b>No Manuals found!</b><p><p>Please place some manuals in <i>'.
 				getcwd().DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.
-				'</i> and restart the explorer!</p>';
+				'</i> or configure the manual path in your phpexplorer.ini file and restart the explorer!</p>';
 		}
 		$this->widget->load_from_string(file_get_contents('data/index.html', FILE_USE_INCLUDE_PATH).$index);
 		$this->widget->show_all();
