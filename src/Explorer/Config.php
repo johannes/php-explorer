@@ -20,11 +20,11 @@ class Config implements \ArrayAccess {
      *
      * @return array
      */
-    protected function getConfigDirs() {
+    protected function getSearchList() {
 	return array(
-	    getenv('HOME'),
-	    '/etc',
-	    BASEDIR.'/data'
+	    getenv('HOME').'/.phpexplorer.ini',
+	    '/etc/phpexplorer.ini',
+	    BASEDIR.'/data/phpexplorer.ini'
 	);
     }
 
@@ -33,7 +33,7 @@ class Config implements \ArrayAccess {
      * @param string $overridefile file path to an file overriding settings
      */
     private function __construct($overridefile = null) {
-	$order = $this->getConfigDirs();
+	$order = $this->getSearchList();
 	if ($overridefile) {
 	    array_unshift($order, $overridefile);
 	} else {
@@ -41,8 +41,7 @@ class Config implements \ArrayAccess {
 	    $this->data[] = array();
 	}
 
-	foreach ($order as $dir) {
-	    $filename = $dir.DIRECTORY_SEPARATOR.'phpexplorer.ini';
+	foreach ($order as $filename) {
 	    if (file_exists($filename)) {
 		$this->parseFile($filename);
 	    }
