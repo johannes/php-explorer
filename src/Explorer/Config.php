@@ -7,9 +7,9 @@ class Config implements \ArrayAccess {
     protected $data = array();
 
     private function parseFile($filename) {
-	$data = parse_ini_file($filename, false);
-	if (is_array($data)) {
-	    $this->data[$filename] = $data;
+        $data = parse_ini_file($filename, false);
+        if (is_array($data)) {
+            $this->data[$filename] = $data;
 	}
     }
 
@@ -21,11 +21,11 @@ class Config implements \ArrayAccess {
      * @return array
      */
     protected function getSearchList() {
-	return array(
-	    getenv('HOME').'/.phpexplorer.ini',
-	    '/etc/phpexplorer.ini',
-	    BASEDIR.'/data/phpexplorer.ini'
-	);
+        return array(
+            getenv('HOME').'/.phpexplorer.ini',
+            '/etc/phpexplorer.ini',
+            BASEDIR.'/data/phpexplorer.ini'
+        );
     }
 
     /**
@@ -33,19 +33,19 @@ class Config implements \ArrayAccess {
      * @param string $overridefile file path to an file overriding settings
      */
     private function __construct($overridefile = null) {
-	$order = $this->getSearchList();
-	if ($overridefile) {
-	    array_unshift($order, $overridefile);
-	} else {
-	    // At index 0 I expect the user config for making it writable
-	    $this->data[] = array();
-	}
+        $order = $this->getSearchList();
+        if ($overridefile) {
+            array_unshift($order, $overridefile);
+        } else {
+            // At index 0 I expect the user config for making it writable
+            $this->data[] = array();
+        }
 
-	foreach ($order as $filename) {
-	    if (file_exists($filename)) {
-		$this->parseFile($filename);
-	    }
-	}
+        foreach ($order as $filename) {
+            if (file_exists($filename)) {
+                $this->parseFile($filename);
+            }
+        }
     }
 
     /**
@@ -54,49 +54,49 @@ class Config implements \ArrayAccess {
      * @return Explorer\config
      */
     static function getInstance($overridefile = null) {
-	if (self::$instance) {
-	    return $instance;
-	} else {
-	    $class = get_called_class();
-	    return new $class($overridefile);
-	}
+        if (self::$instance) {
+            return $instance;
+        } else {
+            $class = get_called_class();
+            return new $class($overridefile);
+        }
     }
 
     public function getLoadedFiles() {
-	$data = $this->data;
-	if (isset($data[0])) {
-	    unset($data[0]);
-	}
-	return array_keys($data);
+        $data = $this->data;
+        if (isset($data[0])) {
+            unset($data[0]);
+        }
+        return array_keys($data);
     }
 
     public function offsetGet($offset) {
-	foreach ($this->data as $data) {
-	    if (isset($data[$offset])) {
-		return $data[$offset];
-	    }
-	}
+        foreach ($this->data as $data) {
+            if (isset($data[$offset])) {
+                return $data[$offset];
+            }
+        }
 
-	throw new ConfigValueNotFoundException($offset);
+        throw new ConfigValueNotFoundException($offset);
     }
 
     public function offsetExists($offset) {
-	foreach ($this->data as $data) {
-	    if (isset($data[$offset])) {
-		return true;
-	    }
-	}
+        foreach ($this->data as $data) {
+            if (isset($data[$offset])) {
+                return true;
+            }
+        }
 
-	return false;
+        return false;
     }
 
     public function offsetSet($offset, $value) {
-	$this->data[0][$offset] = $value;
+        $this->data[0][$offset] = $value;
     }
 
     
     public function offsetUnset($offset) {
-	unset($this->data[0][$offset]);
+        unset($this->data[0][$offset]);
     }
 }
 
