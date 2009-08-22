@@ -39,9 +39,6 @@ class Config implements \ArrayAccess {
         $order = $this->getSearchList();
         if ($overridefile) {
             array_unshift($order, $overridefile);
-        } else {
-            // At index 0 I expect the user config for making it writable
-            //$this->data[] = array();
         }
 
         foreach ($order as $filename) {
@@ -136,13 +133,15 @@ class Config implements \ArrayAccess {
 
     public function offsetSet($offset, $value) {
         $this->changed = true;
-        $this->data[0][$offset] = $value;
+        reset($this->data);
+        $this->data[key($this->data)][$offset] = $value;
     }
 
     
     public function offsetUnset($offset) {
         $this->changed = true;
-        unset($this->data[0][$offset]);
+        reset($this->data);
+        unset($this->data[key($this->data)][$offset]);
     }
 }
 
