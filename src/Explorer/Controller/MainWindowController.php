@@ -50,7 +50,11 @@ class MainWindowController {
 
     private function class_tree($store, $parent, $all, $items) {
         foreach ($all[$items] as $item) {
-            $p = $store->append($parent, array($item, new \ReflectionClass($item)));
+            $ref = new \ReflectionClass($item);
+            if ($ref->isUserDefined()) {
+                continue;
+            }
+            $p = $store->append($parent, array($item, $ref));
             if (!empty($all[$item])) {
                 $this->class_tree($store, $p, $all, $item);
             }
