@@ -20,7 +20,6 @@ class InitFuncFilterIterator extends \FilterIterator {
 
 class MainWindowController {
     protected $glade;
-    protected $viewer;
     protected $mainWindow;
     /**
      *
@@ -161,14 +160,12 @@ class MainWindowController {
             break;       
         }
 
-        $this->glade->get_widget('datalabel')->set_text($text);
         if ($ref instanceof \Reflector) {
             $this->mainWindow->showDocumentation($ref);
         }
     }
 
     function showPageFromArchive(\PharfileInfo $ref) {
-	$this->glade->get_widget('datalabel')->set_text('');
 	$this->viewer->displayString(file_get_contents($ref->getPathinfo()));
         return;
     }
