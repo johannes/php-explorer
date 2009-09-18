@@ -1,6 +1,7 @@
 <?php
 namespace Explorer\Controller;
 
+include 'Explorer/Model/ClassTree.php';
 include 'Explorer/GUI/DocViewer.php';
 
 class InitFuncFilterIterator extends \FilterIterator {
@@ -48,28 +49,9 @@ class MainWindowController {
         fillTreeView($this, $this->glade, 'functiontreeview', $store);
     }
 
-    private function class_tree($store, $parent, $all, $items) {
-        foreach ($all[$items] as $item) {
-            $ref = new \ReflectionClass($item);
-            if ($ref->isUserDefined()) {
-                continue;
-            }
-            $p = $store->append($parent, array($item, $ref));
-            if (!empty($all[$item])) {
-                $this->class_tree($store, $p, $all, $item);
-            }
-        }
-        return $store;
-    }
-
     public function initClassTree() {
-        $children = array();
-        foreach (get_declared_classes() as $c) {
-            $children[get_parent_class($c)][] = $c;
-        }
-
-        $store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
-        fillTreeView($this, $this->glade, 'classtreeview', $this->class_tree($store, null, $children, '0'));
+        $store = new \Explorer\Model\ClassTree(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
+        fillTreeView($this, $this->glade, 'classtreeview', $store);
     }
 
     public function initExtensionTree() {
