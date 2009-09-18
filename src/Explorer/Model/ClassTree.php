@@ -1,11 +1,11 @@
 <?php
 namespace Explorer\Model;
 
-class ClassTree extends \GtkTreeStore {
+class ClassTree extends PHPItemTree {
     private $all = array();
 
     public function __construct() {
-	parent::__construct(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
+	parent::__construct();
 
         foreach (get_declared_classes() as $c) {
             $this->all[get_parent_class($c)][] = $c;

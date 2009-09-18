@@ -1,7 +1,11 @@
 <?php
 namespace Explorer\Controller;
 
+include 'Explorer/Model/PHPItemTree.php';
+include 'Explorer/Model/PHPItemTreeWithFunctions.php';
 include 'Explorer/Model/ClassTree.php';
+include 'Explorer/Model/FunctionTree.php';
+include 'Explorer/Model/ExtensionTree.php';
 include 'Explorer/GUI/MainWindow.php';
 include 'Explorer/GUI/DocViewer.php';
 
@@ -47,25 +51,17 @@ class MainWindowController {
     }
 
     public function initFunctionList() {
-        $store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
-        addFunctions($store, NULL, get_defined_functions());
+	$store = new \Explorer\Model\FunctionTree();
         $this->mainWindow->fillFunctionTree($store);
     }
 
     public function initClassTree() {
-        $store = new \Explorer\Model\ClassTree(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
+        $store = new \Explorer\Model\ClassTree();
         $this->mainWindow->fillClassTree($store);
     }
 
     public function initExtensionTree() {
-        $store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
-        foreach (get_loaded_extensions() as $ext) {
-            $re = new \ReflectionExtension($ext);
-            $extensions = $store->append(NULL, array($ext, $re));
-
-            addFunctions($store, $extensions, $re->getFunctions());
-            addClasses($store, $extensions, $re->getClasses());
-        }
+	$store = new \Explorer\Model\ExtensionTree();
         $this->mainWindow->fillExtensionTree($store);
     }
 

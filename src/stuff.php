@@ -1,16 +1,5 @@
 <?php
-function addClasses(GtkTreeStore $store, $parent, array $classes) {
-	foreach ($classes as $rc) {
-		if (is_string($rc)) {
-			$rc = new ReflectionClass($rc);
-		}
-		if (!$rc->isInternal()) {
-			return;
-		}
-		$class = $store->append($parent, array($rc->getName(), $rc));
-		addFunctions($store, $class, $rc->getMethods());
-	}
-}
+
 function getParamString(ReflectionFunctionAbstract $rf) {
 	$params = array();
 	foreach ($rf->getParameters() as $param) {
@@ -39,20 +28,3 @@ function getFunctionString(ReflectionFunctionAbstract $ref) {
 	$name .= ')';
 	return $name;
 }
-
-function addFunctions(GtkTreeStore $store, $parent, array $functions) {
-	if (!empty($functions['internal'])) {
-		$functions = $functions['internal'];
-	}
-	foreach ($functions as $ref) {
-		if (is_string($ref)) {
-			$ref = new ReflectionFunction($ref);
-		}
-		if (!$ref->isInternal()) {
-			return;
-		}
-		$name = getFunctionString($ref);
-		$store->append($parent, array($name, $ref));
-	}
-}
-
