@@ -11,10 +11,36 @@ class MainWindow {
     */
     private $controller;
     private $glade;
+    private $viewer;
 
     public function __construct(\Explorer\Controller\MainWindowController $controller) {
 	$this->controller = $controller;
         $this->glade = $controller->getGlade();
+	$this->initBrowser();
+    }
+
+    public function initBrowser() {
+        $container = $this->glade->get_widget('docscrolledwindow');
+        if (class_exists('GtkHTML')) {
+            $config = \Explorer\Config::getInstance();
+	    $manual = $this->controller->getManual();
+            $this->viewer = new \Explorer\GUI\HTMLManualViewer($manual);
+        } else {
+            $this->viewer = new \Explorer\GUI\TextDocViewer();
+        }
+        $container->add($this->viewer->getWidget());
+    }
+
+    public function viewerCanHTML() {
+	return $this->viewer->canHTML();
+    }
+
+    public function show() {
+	$this->glade->get_widget('mainwindow')->set_visible(true);
+    }
+
+    public function showDocumentation(\Reflector $r) {
+	$this->viewer->showDocumentation($r);
     }
 
     public function onSelectHandler($selection) {

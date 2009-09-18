@@ -7,6 +7,10 @@ abstract class DocViewer {
         return $this->widget;
     }
 
+    public function canHTML() {
+	return false;
+    }
+
     abstract public function showDocumentation(\Reflector $r);
 }
 
@@ -50,6 +54,10 @@ class HTMLManualViewer extends DocViewer {
         }
         $this->widget->load_from_string(file_get_contents('data/index.html', FILE_USE_INCLUDE_PATH).$index);
         $this->widget->show_all();
+    }
+
+    public function canHTML() {
+	return false;
     }
 
     public function showDocumentation(\Reflector $r) {

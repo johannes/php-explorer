@@ -47,7 +47,7 @@ class MainWindowController {
         }
 
         $this->glade->get_widget('loadingwindow')->set_visible(false);
-        $this->glade->get_widget('mainwindow')->set_visible(true);
+        $this->mainWindow->show();
     }
 
     public function initFunctionList() {
@@ -65,16 +65,12 @@ class MainWindowController {
         $this->mainWindow->fillExtensionTree($store);
     }
 
-    public function initBrowser() {
-        $container = $this->glade->get_widget('docscrolledwindow');
-        if (class_exists('GtkHTML')) {
-            $config = \Explorer\Config::getInstance();
-            $this->manual = new \Explorer\Manual\Manual($config['datadir'], $config['language']);
-            $this->viewer = new \Explorer\GUI\HTMLManualViewer($this->manual);
-        } else {
-            $this->viewer = new \Explorer\GUI\TextDocViewer();
-        }
-        $container->add($this->viewer->getWidget());
+    public function getManual() {
+	if (!$this->manual) {
+	    $config = \Explorer\Config::getInstance();
+	    $this->manual = new \Explorer\Manual\Manual($config['datadir'], $config['language']);
+	}
+	return $this->manual;
     }
 
     private function loadGlade($file) {
@@ -167,7 +163,7 @@ class MainWindowController {
 
         $this->glade->get_widget('datalabel')->set_text($text);
         if ($ref instanceof \Reflector) {
-            $this->viewer->showDocumentation($ref);
+            $this->mainWindow->showDocumentation($ref);
         }
     }
 
