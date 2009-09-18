@@ -56,15 +56,3 @@ function addFunctions(GtkTreeStore $store, $parent, array $functions) {
 	}
 }
 
-function fillTreeView($main, GladeXML $glade, $treeview, $store) {
-	$tree = $glade->get_widget($treeview);
-
-	$store->set_sort_column_id(0, Gtk::SORT_ASCENDING);
-	$tree->set_model($store);
-	$tree->get_selection()->connect('changed', array($main, 'onSelectHandler'));
-
-	$cell_renderer = new GtkCellRendererText();
-	$colExt = new GtkTreeViewColumn('', $cell_renderer, 'text', 0);
-	$tree->append_column($colExt);
-}
-

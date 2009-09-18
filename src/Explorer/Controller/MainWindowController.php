@@ -2,6 +2,7 @@
 namespace Explorer\Controller;
 
 include 'Explorer/Model/ClassTree.php';
+include 'Explorer/GUI/MainWindow.php';
 include 'Explorer/GUI/DocViewer.php';
 
 class InitFuncFilterIterator extends \FilterIterator {
@@ -16,6 +17,7 @@ class InitFuncFilterIterator extends \FilterIterator {
 class MainWindowController {
     protected $glade;
     protected $viewer;
+    protected $mainWindow;
     /**
      *
      * @var \Explorer\Manual\Manual
@@ -24,6 +26,7 @@ class MainWindowController {
 
     public function __construct($file) {
         $this->loadGlade($file);
+	$this->mainWindow = new \Explorer\GUI\MainWindow($this);
         $status = $this->glade->get_widget('loadingprogress');
 
         $r = new \ReflectionObject($this);
@@ -46,12 +49,12 @@ class MainWindowController {
     public function initFunctionList() {
         $store = new \GtkTreeStore(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
         addFunctions($store, NULL, get_defined_functions());
-        fillTreeView($this, $this->glade, 'functiontreeview', $store);
+        $this->mainWindow->fillFunctionTree($store);
     }
 
     public function initClassTree() {
         $store = new \Explorer\Model\ClassTree(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
-        fillTreeView($this, $this->glade, 'classtreeview', $store);
+        $this->mainWindow->fillClassTree($store);
     }
 
     public function initExtensionTree() {
@@ -63,7 +66,7 @@ class MainWindowController {
             addFunctions($store, $extensions, $re->getFunctions());
             addClasses($store, $extensions, $re->getClasses());
         }
-        fillTreeView($this, $this->glade, 'extensiontreeview', $store);
+        $this->mainWindow->fillExtensionTree($store);
     }
 
     public function initBrowser() {
