@@ -128,59 +128,53 @@ class MainWindowController {
         }
         $tree = $this->glade->get_widget('searchtreeview');
         $tree->set_model($store);
-        $tree->get_selection()->connect('changed', array($this, 'onSelectHandler'));
+        $tree->get_selection()->connect('changed', array($this, 'showPageFromArchive')); /* TODO: Move to view  */
 
         $cell_renderer = new \GtkCellRendererText();
         $colExt = new \GtkTreeViewColumn('', $cell_renderer, 'text', 0);
         $tree->append_column($colExt);
     }
 
-    public function onSelectHandler($selection) {
-        list($model, $iter) = $selection->get_selected();
-
-        $ref = $model->get_value($iter, 1);
+    public function showElementInfo(\Reflector $ref) {
         $text = '';
-        if ($ref) {
-            switch(get_class($ref)) {
-            case 'ReflectionClass':
-                $text = $ref->getName();
-                if ($ext = $ref->getExtension()) {
-                    $text = $ext->getName().' | '.$text;
-                }
-                break;
-            case 'ReflectionMethod':
-                $text = $ref->getDeclaringClass()->getName().getFunctionString($ref);
-                if ($ext = $ref->getExtension()) {
-                    $text = $ext->getName().' | '.$text;
-                }
-                break;
-            case 'ReflectionFunction':
-                $text = getFunctionString($ref);
-                if ($ext = $ref->getExtension()) {
-                    $text = $ext->getName().' | '.$text;
-                }
-                break;
-            case 'ReflectionExtension':
-                $text = $ref->getName();
-                break;
-            case 'PharFileInfo':
-                /* TODO: Fix architecture */
-                if ($this->viewer instanceof \Explorer\GUI\HTMLManualViewer) {
-                    $this->viewer->displayString(file_get_contents($ref->getPathinfo()));
-                    return;
-                }
-                throw \Exception("Shouldn't happen - fix the architecture");
-                break;
-            default:
-                $text = "Can't display element of class ".get_class($ref);
-                break;
+
+        switch(get_class($ref)) {
+        case 'ReflectionClass':
+            $text = $ref->getName();
+            if ($ext = $ref->getExtension()) {
+                $text = $ext->getName().' | '.$text;
             }
+            break;
+        case 'ReflectionMethod':
+            $text = $ref->getDeclaringClass()->getName().getFunctionString($ref);
+            if ($ext = $ref->getExtension()) {
+                $text = $ext->getName().' | '.$text;
+            }
+            break;
+        case 'ReflectionFunction':
+            $text = getFunctionString($ref);
+            if ($ext = $ref->getExtension()) {
+                $text = $ext->getName().' | '.$text;
+            }
+            break;
+        case 'ReflectionExtension':
+            $text = $ref->getName();
+            break;
+        default:
+            $text = "Can't display element of class ".get_class($ref);
+            break;       
         }
 
         $this->glade->get_widget('datalabel')->set_text($text);
         if ($ref instanceof \Reflector) {
             $this->viewer->showDocumentation($ref);
         }
+    }
+
+    function showPageFromArchive(\PharfileInfo $ref) {
+	$this->glade->get_widget('datalabel')->set_text('');
+	$this->viewer->displayString(file_get_contents($ref->getPathinfo()));
+        return;
     }
 
 }

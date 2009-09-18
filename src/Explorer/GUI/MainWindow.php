@@ -18,7 +18,12 @@ class MainWindow {
     }
 
     public function onSelectHandler($selection) {
-	$this->controller->onSelectHandler($selection);
+	list($model, $iter) = $selection->get_selected();
+
+        $ref = $model->get_value($iter, 1);
+	if ($ref) {
+	    $this->controller->showElementInfo($ref);
+	}
     }
 
     function fillFunctionTree($store) {
