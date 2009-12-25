@@ -123,7 +123,7 @@ class MainWindowController {
         }
         $tree = $this->glade->get_widget('searchtreeview');
         $tree->set_model($store);
-        $tree->get_selection()->connect('changed', array($this, 'showPageFromArchive')); /* TODO: Move to view  */
+        $tree->get_selection()->connect('changed', array($this->mainWindow, 'onSearchResultClick')); /* TODO: Move to view  */
 
         $cell_renderer = new \GtkCellRendererText();
         $colExt = new \GtkTreeViewColumn('', $cell_renderer, 'text', 0);
@@ -131,42 +131,11 @@ class MainWindowController {
     }
 
     public function showElementInfo(\Reflector $ref) {
-        $text = '';
-
-        switch(get_class($ref)) {
-        case 'ReflectionClass':
-            $text = $ref->getName();
-            if ($ext = $ref->getExtension()) {
-                $text = $ext->getName().' | '.$text;
-            }
-            break;
-        case 'ReflectionMethod':
-            $text = $ref->getDeclaringClass()->getName().getFunctionString($ref);
-            if ($ext = $ref->getExtension()) {
-                $text = $ext->getName().' | '.$text;
-            }
-            break;
-        case 'ReflectionFunction':
-            $text = getFunctionString($ref);
-            if ($ext = $ref->getExtension()) {
-                $text = $ext->getName().' | '.$text;
-            }
-            break;
-        case 'ReflectionExtension':
-            $text = $ref->getName();
-            break;
-        default:
-            $text = "Can't display element of class ".get_class($ref);
-            break;       
-        }
-
-        if ($ref instanceof \Reflector) {
-            $this->mainWindow->showDocumentation($ref);
-        }
+        $this->mainWindow->showDocumentation($ref);
     }
 
     function showPageFromArchive(\PharfileInfo $ref) {
-	$this->viewer->displayString(file_get_contents($ref->getPathinfo()));
+	$this->mainWindow->showString(file_get_contents($ref->getPathinfo()));
         return;
     }
 

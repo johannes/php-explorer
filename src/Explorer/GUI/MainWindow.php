@@ -43,12 +43,25 @@ class MainWindow {
 	$this->viewer->showDocumentation($r);
     }
 
+    public function showString($content) {
+	$this->viewer->displayString($content);
+    }
+
     public function onSelectHandler($selection) {
 	list($model, $iter) = $selection->get_selected();
 
         $ref = $model->get_value($iter, 1);
 	if ($ref) {
 	    $this->controller->showElementInfo($ref);
+	}
+    }
+
+    public function onSearchResultClick($selection) {
+	list($model, $iter) = $selection->get_selected();
+
+        $info = $model->get_value($iter, 1);
+	if ($info) {
+	    $this->controller->showPageFromArchive($info);
 	}
     }
 
