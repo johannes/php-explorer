@@ -11,4 +11,4 @@ abstract class PHPItemTree extends \GtkTreeStore {
 	parent::__construct(\GObject::TYPE_STRING, \GObject::TYPE_PHP_VALUE);
     }
 }
-?>
+
