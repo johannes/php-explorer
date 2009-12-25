@@ -53,7 +53,7 @@ class ManualTest extends \PHPUnit_Framework_TestCase
   	    $this->assertArrayHasKey('filename', $data[$i]);
 	    $this->assertArrayHasKey('archive', $data[$i]);
 	    
-	    $this->assertEquals('PharData', get_class($data[$i]['archive']));
+	    $this->assertType('PharData', $data[$i]['archive']);
 	}
     }
 
@@ -73,9 +73,6 @@ class ManualTest extends \PHPUnit_Framework_TestCase
 	$result = $this->object->get(new \ReflectionExtension('spl'));
 	$this->assertType('PharFileInfo', $result);
 	// Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
     }
 
     /**
