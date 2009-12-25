@@ -7,7 +7,7 @@ namespace Explorer\Model;
  * @author johannes
  */
 abstract class PHPItemTreeWithFunctions extends PHPItemTree {
-    function addFunctions($parent, array $functions) {
+    protected function addFunctions($parent, array $functions) {
         if (!empty($functions['internal'])) {
             $functions = $functions['internal'];
         }
